@@ -212,6 +212,9 @@ namespace Content.Server.GameTicking
             RunLevel = GameRunLevel.InRound;
 
             _roundStartTimeSpan = _gameTiming.RealTime;
+	    _timeUntilNextJoin = _gameTiming.CurTime + new TimeSpan(0, 15, 0);
+
+
             SendStatusToAll();
             ReqWindowAttentionAll();
             UpdateLateJoinStatus();
@@ -394,6 +397,7 @@ namespace Content.Server.GameTicking
             foreach (var unCastData in _playerManager.GetAllPlayerData())
             {
                 unCastData.ContentData()?.WipeMind();
+		unCastData.ContentData()?.UsedCharacters.Clear();
             }
 
             // Delete all entities.

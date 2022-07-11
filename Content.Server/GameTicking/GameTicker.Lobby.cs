@@ -1,4 +1,5 @@
 using Content.Shared.GameTicking;
+using Content.Server.Players;
 using Robust.Server.Player;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
@@ -16,6 +17,10 @@ namespace Content.Server.GameTicking
         [ViewVariables]
         private TimeSpan _roundStartTime;
 
+	[ViewVariables]
+        private TimeSpan? _timeUntilNextJoin;
+
+	
         [ViewVariables]
         private TimeSpan _pauseTime;
 
@@ -66,8 +71,9 @@ namespace Content.Server.GameTicking
 
         private TickerLobbyStatusEvent GetStatusMsg(IPlayerSession session)
         {
+	    var isFirstJoin = (PlayerDataExt.ContentData(session)?.UsedCharacters?.Count ?? 0) == 0;
             _playersInLobby.TryGetValue(session, out var status);
-            return new TickerLobbyStatusEvent(RunLevel != GameRunLevel.PreRoundLobby, LobbySong, LobbyBackground,status == LobbyPlayerStatus.Ready, _roundStartTime, Paused);
+            return new TickerLobbyStatusEvent(RunLevel != GameRunLevel.PreRoundLobby, LobbySong, LobbyBackground,status == LobbyPlayerStatus.Ready, _roundStartTime, isFirstJoin ? null : _timeUntilNextJoin, Paused);
         }
 
         private void SendStatusToAll()

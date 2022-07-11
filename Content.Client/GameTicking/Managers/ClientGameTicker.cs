@@ -32,10 +32,13 @@ namespace Content.Client.GameTicking.Managers
         [ViewVariables] public bool DisallowedLateJoin { get; private set; }
         [ViewVariables] public string? ServerInfoBlob { get; private set; }
         [ViewVariables] public TimeSpan StartTime { get; private set; }
+	[ViewVariables] public TimeSpan? TimeUntilNextJoin { get; private set; }
         [ViewVariables] public new bool Paused { get; private set; }
         [ViewVariables] public Dictionary<NetUserId, LobbyPlayerStatus> Status { get; private set; } = new();
         [ViewVariables] public IReadOnlyDictionary<EntityUid, Dictionary<string, uint?>> JobsAvailable => _jobsAvailable;
         [ViewVariables] public IReadOnlyDictionary<EntityUid, string> StationNames => _stationNames;
+
+	
 
         public event Action? InfoBlobUpdated;
         public event Action? LobbyStatusUpdated;
@@ -87,11 +90,13 @@ namespace Content.Client.GameTicking.Managers
         private void LobbyStatus(TickerLobbyStatusEvent message)
         {
             StartTime = message.StartTime;
+	    TimeUntilNextJoin = message.TimeUntilNextJoin;
             IsGameStarted = message.IsRoundStarted;
             AreWeReady = message.YouAreReady;
             LobbySong = message.LobbySong;
             LobbyBackground = message.LobbyBackground;
             Paused = message.Paused;
+	    
             if (IsGameStarted)
                 Status.Clear();
 

@@ -133,21 +133,34 @@ namespace Content.Client.Lobby
             if (_lobby == null) return;
 
             var gameTicker = EntitySystem.Get<ClientGameTicker>();
-            if (gameTicker.IsGameStarted)
+	    bool gameStarted = gameTicker.IsGameStarted;
+	    var timeNextJoin = gameTicker.TimeUntilNextJoin;
+            if (gameStarted && timeNextJoin == null)
             {
-                _lobby.StartTime.Text = string.Empty;
-                return;
+		_lobby.StartTime.Text = string.Empty;
+		return;
             }
 
             string text;
+	    TimeSpan time;
+	    if (gameStarted)
+	    {
+		if(timeNextJoin == null) return;
+		time = (TimeSpan) timeNextJoin;
+	    }
+	    else
+	    {
+		time = _gameTicker.StartTime;
+	    }
 
+	    
             if (gameTicker.Paused)
             {
                 text = Loc.GetString("lobby-state-paused");
             }
             else
             {
-                var difference = gameTicker.StartTime - _gameTiming.CurTime;
+                var difference = time - _gameTiming.CurTime;
                 var seconds = difference.TotalSeconds;
                 if (seconds < 0)
                 {
@@ -159,7 +172,14 @@ namespace Content.Client.Lobby
                 }
             }
 
-            _lobby.StartTime.Text = Loc.GetString("lobby-state-round-start-countdown-text", ("timeLeft", text));
+	    if (gameStarted)
+	    {
+		_lobby.StartTime.Text = Loc.GetString("lobby-state-round-time-next-join", ("timeLeft", text));
+	    }
+	    else if (text != "")
+	    {
+		_lobby.StartTime.Text = Loc.GetString("lobby-state-round-start-countdown-text", ("timeLeft", text));
+	    }
         }
 
         private void PlayerManagerOnPlayerListUpdated(object? sender, EventArgs e)
