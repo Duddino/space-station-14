@@ -30,6 +30,7 @@ namespace Content.Client.EscapeMenu.UI
             QuitButton.OnPressed += OnQuitButtonClicked;
             RulesButton.OnPressed += _ => new RulesAndInfoWindow().Open();
             DisconnectButton.OnPressed += OnDisconnectButtonClicked;
+	    LobbyButton.OnPressed += OnLobbyButtonClicked;
             WikiButton.OnPressed += OnWikiButtonClicked;
         }
 
@@ -55,6 +56,12 @@ namespace Content.Client.EscapeMenu.UI
             var uriOpener = IoCManager.Resolve<IUriOpener>();
             uriOpener.OpenUri(UILinks.Wiki);
         }
+
+	private void OnLobbyButtonClicked(BaseButton.ButtonEventArgs args)
+	{
+	    Logger.Debug("Pressed OnLobby");
+	    _consoleHost.ExecuteCommand("respawnghost");
+	}
 
         protected override void Dispose(bool disposing)
         {

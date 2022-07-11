@@ -1136,5 +1136,10 @@ namespace Content.Shared.CCVar
         /// </summary>
         public static readonly CVarDef<float> GhostRoleTime =
             CVarDef.Create("ghost.role_time", 3f, CVar.REPLICATED);
+
+	/// <summary>
+	/// The time in minutes before players can respawn with another character. A negative number if disabled, 0 for no delay.
+	/// </summary>
+	public static readonly CVarDef<float> RespawnTime = CVarDef.Create("game.respawn_time", -1f, CVar.SERVERONLY);
     }
 }

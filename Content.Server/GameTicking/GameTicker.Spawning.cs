@@ -96,6 +96,13 @@ namespace Content.Server.GameTicking
             // Can't spawn players with a dummy ticker!
             if (DummyTicker)
                 return;
+	    
+	    var p = PlayerDataExt.ContentData(player);
+	    if(p?.UsedCharacters?.Contains(character.Name) ?? false)
+	    {
+		return;
+	    }
+
 
             if (station == EntityUid.Invalid)
             {

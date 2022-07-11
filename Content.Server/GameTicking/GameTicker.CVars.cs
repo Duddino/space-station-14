@@ -29,6 +29,9 @@ namespace Content.Server.GameTicking
         [ViewVariables]
         public int RoundStartFailShutdownCount { get; private set; } = 0;
 #endif
+	[ViewVariables]
+        public float RespawnTime { get; private set; } = -1f;
+
 
         private void InitializeCVars()
         {
@@ -40,6 +43,7 @@ namespace Content.Server.GameTicking
             _configurationManager.OnValueChanged(CCVars.StationOffset, value => StationOffset = value, true);
             _configurationManager.OnValueChanged(CCVars.StationRotation, value => StationRotation = value, true);
             _configurationManager.OnValueChanged(CCVars.MaxStationOffset, value => MaxStationOffset = value, true);
+	    _configurationManager.OnValueChanged(CCVars.RespawnTime, value => RespawnTime = value, true);
 #if EXCEPTION_TOLERANCE
             _configurationManager.OnValueChanged(CCVars.RoundStartFailShutdownCount, value => RoundStartFailShutdownCount = value, true);
 #endif

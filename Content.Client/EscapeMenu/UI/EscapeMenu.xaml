@@ -11,6 +11,7 @@
         <Button Name="RulesButton" Text="{Loc 'ui-escape-rules'}" />
         <Button Name="WikiButton" Text="{Loc 'ui-escape-wiki'}" />
         <Button Name="DisconnectButton" Text="{Loc 'ui-escape-disconnect'}" />
+	<Button Name="LobbyButton" Text="{Loc 'ui-return-to-lobby'}" />
         <Button Name="QuitButton" Text="{Loc 'ui-escape-quit'}" />
     </BoxContainer>
 </DefaultWindow>

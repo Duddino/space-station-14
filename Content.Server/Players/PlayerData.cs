@@ -35,6 +35,11 @@ namespace Content.Server.Players
         /// </summary>
         public bool ExplicitlyDeadminned { get; set; }
 
+        /// <summary>
+        ///     Which characters are already used
+        /// </summary>
+        public List<String> UsedCharacters { get; set; }
+
         public void WipeMind()
         {
             Mind?.TransferTo(null);
@@ -54,6 +59,7 @@ namespace Content.Server.Players
         {
             UserId = userId;
             Name = name;
+	    UsedCharacters = new();
         }
     }
 

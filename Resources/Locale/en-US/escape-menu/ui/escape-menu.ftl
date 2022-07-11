@@ -5,5 +5,6 @@ ui-escape-options = Options
 ui-escape-rules = Rules
 ui-escape-wiki = Wiki
 ui-escape-disconnect = Disconnect
+ui-return-to-lobby = Return To Lobby
 ui-escape-quit = Quit
 
