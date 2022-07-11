@@ -97,13 +97,6 @@ namespace Content.Server.GameTicking
             if (DummyTicker)
                 return;
 	    
-	    var p = PlayerDataExt.ContentData(player);
-	    if(p?.UsedCharacters?.Contains(character.Name) ?? false)
-	    {
-		return;
-	    }
-
-
             if (station == EntityUid.Invalid)
             {
                 var stations = _stationSystem.Stations.ToList();

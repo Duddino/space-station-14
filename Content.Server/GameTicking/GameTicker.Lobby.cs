@@ -69,9 +69,10 @@ namespace Content.Server.GameTicking
             return new TickerLobbyReadyEvent(players);
         }
 
-        private TickerLobbyStatusEvent GetStatusMsg(IPlayerSession session)
+        private TickerLobbyStatusEvent GetStatusMsg
+(IPlayerSession session)
         {
-	    var isFirstJoin = (PlayerDataExt.ContentData(session)?.UsedCharacters?.Count ?? 0) == 0;
+	    var isFirstJoin = (session.ContentData()?.UsedCharacters?.Count ?? 0) == 0;
             _playersInLobby.TryGetValue(session, out var status);
             return new TickerLobbyStatusEvent(RunLevel != GameRunLevel.PreRoundLobby, LobbySong, LobbyBackground,status == LobbyPlayerStatus.Ready, _roundStartTime, isFirstJoin ? null : _timeUntilNextJoin, Paused);
         }
@@ -137,7 +138,7 @@ namespace Content.Server.GameTicking
             }
 
             var status = ready ? LobbyPlayerStatus.Ready : LobbyPlayerStatus.NotReady;
-            _playersInLobby[player] = ready ? LobbyPlayerStatus.Ready : LobbyPlayerStatus.NotReady;
+            _playersInLobby[player] = status;
             RaiseNetworkEvent(GetStatusMsg(player), player.ConnectedClient);
             RaiseNetworkEvent(GetStatusSingle(player, status));
         }

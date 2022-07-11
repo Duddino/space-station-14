@@ -92,7 +92,7 @@ namespace Content.Client.Lobby
 
             _lobby.ReadyButton.OnPressed += _ =>
             {
-                if (!_gameTicker.IsGameStarted)
+                if (!_gameTicker.IsGameStarted  || _gameTicker.TimeUntilNextJoin != null) // This is getting cumbersome, maybe do a new func
                 {
                     return;
                 }
@@ -219,10 +219,20 @@ namespace Content.Client.Lobby
 
             if (gameTicker.IsGameStarted)
             {
-                _lobby.ReadyButton.Text = Loc.GetString("lobby-state-ready-button-join-state");
-                _lobby.ReadyButton.ToggleMode = false;
-                _lobby.ReadyButton.Pressed = false;
-                _lobby.ObserveButton.Disabled = false;
+		var timeNextJoin = _gameTicker.TimeUntilNextJoin;
+		if (timeNextJoin == null)
+		{
+		    _lobby.ReadyButton.Text = Loc.GetString("lobby-state-ready-button-join-state");
+		    _lobby.ReadyButton.ToggleMode = false;
+		    _lobby.ReadyButton.Pressed = false;
+		}
+		else
+		{
+		    _lobby.ReadyButton.Text = Loc.GetString("lobby-state-ready-button-ready-up-state");
+		    _lobby.ReadyButton.ToggleMode = true;
+		    _lobby.ReadyButton.Pressed = gameTicker.AreWeReady;
+		}
+		_lobby.ObserveButton.Disabled = false;
             }
             else
             {
@@ -256,7 +266,7 @@ namespace Content.Client.Lobby
 
         private void SetReady(bool newReady)
         {
-            if (EntitySystem.Get<ClientGameTicker>().IsGameStarted)
+            if (_gameTicker.IsGameStarted && _gameTicker.TimeUntilNextJoin == null)
             {
                 return;
             }

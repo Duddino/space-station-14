@@ -212,7 +212,7 @@ namespace Content.Server.GameTicking
             RunLevel = GameRunLevel.InRound;
 
             _roundStartTimeSpan = _gameTiming.RealTime;
-	    _timeUntilNextJoin = _gameTiming.CurTime + new TimeSpan(0, 15, 0);
+	    _timeUntilNextJoin = _gameTiming.CurTime + new TimeSpan(0, 0, 10);
 
 
             SendStatusToAll();
@@ -462,6 +462,10 @@ namespace Content.Server.GameTicking
             if (RunLevel == GameRunLevel.InRound)
             {
                 RoundLengthMetric.Inc(frameTime);
+		if(_timeUntilNextJoin != null && _timeUntilNextJoin < _gameTiming.CurTime)
+		{
+		    RespawnPlayers();
+		}
             }
 
             if (RunLevel != GameRunLevel.PreRoundLobby || Paused ||
@@ -473,6 +477,27 @@ namespace Content.Server.GameTicking
 
             StartRound();
         }
+
+	private void RespawnPlayers() // TODO: role bans
+	{
+	    
+	    var readyPlayers = _playersInLobby.Where(p => p.Value == LobbyPlayerStatus.Ready).Select(p => p.Key);
+	    var profiles = _prefsManager.GetSelectedProfilesForPlayers(
+		readyPlayers
+		.Select(p => p.UserId).ToList())
+                .ToDictionary(p => p.Key, p => (HumanoidCharacterProfile) p.Value);
+	    
+	    foreach (var readyPlayer in  readyPlayers)
+	    {
+		if (!profiles.ContainsKey(readyPlayer.UserId)) // TODO: filter out
+		{
+		    profiles.Add(readyPlayer.UserId, HumanoidCharacterProfile.Random());
+		}
+	    }
+	    SpawnPlayers(readyPlayers.ToList(), profiles, false);
+	    _timeUntilNextJoin = _gameTiming.CurTime + new TimeSpan(0, 0, 10);
+	}
+
 
         public TimeSpan RoundDuration()
         {
